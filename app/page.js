@@ -5,6 +5,15 @@ export default function Home() {
       <h1 className="font-bold text-xl">Thaler Guide</h1>
       <p className="text-opacity-90 text-slate-700">A Repository for Thaler Resources</p>
     </div>
+
+    <div className="bg-gray-100 px-8 py-2 flex">
+      <div className="grow"></div>
+      <div>
+        <button className="bg-blue-500 py-1 px-4 rounded-md text-white">
+        Create
+        </button>
+      </div>
+    </div>
    </main>
   )
 }
