@@ -3,13 +3,23 @@ import { useState } from "react";
 import ResourceItem from "./components/ResourceItem";
 import CreateFormPopup from "./components/CreateFormPopup";
 import Button from "./components/Button";
+import ResourceItemPopup from "./components/ResourceItemPopup";
 
 export default function Home() {
 
   const [showCreatePopup, setShowCreatePopup] = useState(false);
+  const [showResourcePopup, setShowResourcePopup] = useState(null);
+
   function openCreatePopup(){
     setShowCreatePopup(true);
   }
+
+  function openResourcePopup(resource){
+    setShowResourcePopup(resource);
+  }
+  const resources = [
+    {title:'HMRC DATA', description:'example'}
+  ];
 
   return (
    
@@ -28,12 +38,21 @@ export default function Home() {
       </div>
     </div>
 
-    <ResourceItem />
-    <ResourceItem />
-    <ResourceItem />
+    <div className="px-8">
+      {resources.map(resource => (
+      <ResourceItem {...resource} 
+                    onOpen={() => openResourcePopup(resource)} />
+      ))}
+
+    </div>
     
     {showCreatePopup && (
       <CreateFormPopup setShow={setShowCreatePopup} />
+    )}
+
+    {showResourcePopup && (
+      <ResourceItemPopup {...showResourcePopup} setShow={setShowResourcePopup}/>
+
     )}
    </main>
   )
