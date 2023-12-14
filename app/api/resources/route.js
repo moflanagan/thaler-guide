@@ -6,7 +6,24 @@ const jsonbody = await request.json();
 const {title,description} = jsonbody;
 const mongoUrl = process.env.MONGO_URL;
 mongoose.connect(mongoUrl);
-resourceModel.create({title,description})
+await resourceModel.create({title,description})
 return Response.json({jsonbody, mongoUrl});
 }
 
+export async function GET(req){
+  const url = new URL(req.url)
+  const mongoUrl = process.env.MONGO_URL;
+  mongoose.connect(mongoUrl);
+  const sortValue = url.searchParams.get('sort');
+  const loadedRows = url.searchParams.get('loadedRows');
+  let sortDef;
+  if(sortValue === 'alpha') {
+    sortDef = {title: 1}
+  }
+
+  if(sortValue === 'latest') {
+    sortDef = {createdAt:-1}
+  }
+
+  return Response.json(await resourceModel.find(null,null,{sort:sortDef, skip: loadedRows, limit:23,}).collation({locale: 'en', strength: 2}));
+}

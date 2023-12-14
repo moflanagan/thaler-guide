@@ -4,9 +4,9 @@ export default function ResourceItem({onOpen, title, description}) {
        onClick={ e => {e.preventDefault(); onOpen();}}
        className="my-2 px-8 py-4">
 
-      <div>
+      <div className="flex-grow">
         <h2 className="font-bold">{title}</h2>
-        <p className="text-gray-600 text-sm">{description}</p>
+        
       </div>
     </a>
   );
