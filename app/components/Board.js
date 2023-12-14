@@ -29,13 +29,13 @@ export default function Board(){
     fetchResources(); 
   }, [sort]);
 
-  useEffect(() => {
-    scrollListener();
-    return () => {
-      unScrollListener();
-    };
-  }, [scrollListener, unScrollListener]);
-  
+// eslint-disable-next-line react-hooks/exhaustive-deps
+useEffect(() => {
+  scrollListener();
+  return () => {
+    unScrollListener();
+  };
+}, []);
 
 
   function scrollListener(){
