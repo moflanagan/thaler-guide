@@ -30,11 +30,12 @@ export default function Board(){
   }, [sort]);
 
   useEffect(() => {
-     scrollListener();
-     return () => {
+    scrollListener();
+    return () => {
       unScrollListener();
-     }
-  }, []);
+    };
+  }, [scrollListener, unScrollListener]);
+  
 
 
   function scrollListener(){
