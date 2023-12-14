@@ -25,5 +25,5 @@ export async function GET(req){
     sortDef = {createdAt:-1}
   }
 
-  return Response.json(await resourceModel.find(null,null,{sort:sortDef, skip: loadedRows, limit:23,}).collation({locale: 'en', strength: 2}));
+  return Response.json(await resourceModel.find(null,null,{sort:sortDef, skip: loadedRows, limit:23,}));
 }
