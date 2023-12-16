@@ -118,7 +118,7 @@ useEffect(() => {
       {/* Resource list */}
       <div className="px-8">
         {resources.filter(filterResources).map(resource => (
-          <ResourceItem {...resource} onOpen={() => openResourcePopup(resource)} />
+          <ResourceItem key={resource._id} {...resource} onOpen={() => openResourcePopup(resource)} />
         ))}
       </div>
 
