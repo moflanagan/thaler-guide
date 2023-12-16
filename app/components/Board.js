@@ -35,7 +35,7 @@ useEffect(() => {
   return () => {
     unScrollListener();
   };
-}, [scrollListener, unScrollListener ]);
+}, []);
 
 
   function scrollListener(){
