@@ -1,6 +1,8 @@
 import { resourceModel } from "@/app/models/Resources";
 import mongoose from "mongoose";
 
+ // Fetch resources from API on initial load
+
 export async function POST(request) {
 const jsonbody = await request.json();
 const {title,description} = jsonbody;
