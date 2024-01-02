@@ -10,7 +10,7 @@ export default function Button(props) {
         // Conditional class based on the 'primary' prop:
         // If 'primary' prop is truthy, apply classes for a primary button (bg-emerald-600 and text-white),
         // otherwise, apply classes for a secondary button (text-gray-600)
-        (props.primary ? 'bg-emerald-600 text-white' : 'text-gray-600')
+        (props.primary ? 'bg-green-600 text-white' : 'text-gray-600')
       }
       type="button" // Specifies the button type as 'button'
     />
