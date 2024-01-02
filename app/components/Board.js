@@ -5,92 +5,92 @@ import Button from "../components/Button";
 import ResourceItemPopup from "../components/ResourceItemPopup";
 import axios from "axios";
 
-export default function Board(){
-
-  // State variables
+export default function Board() {
+  // State variables to manage various aspects of the component
   const [showCreatePopup, setShowCreatePopup] = useState(false); // Manages display of create popup
   const [showResourcePopup, setShowResourcePopup] = useState(null); // Manages display of resource popup
   const [resources, setResources] = useState([]); // Stores resource data fetched from API
   const [searchPhrase, setSearchPhrase] = useState(""); // Manages search input
-  const [sort, setSort] = useState('alpha');
-  const fetchingResources = useRef(false);
-  const loadedRows = useRef(0);
-  const sortRef = useRef('alpha');
-
+  const [sort, setSort] = useState('alpha'); // Manages sorting criteria
+  const fetchingResources = useRef(false); // Helps track ongoing resource fetching
+  const loadedRows = useRef(0); // Helps track the number of loaded rows
+  const sortRef = useRef('alpha'); // Helps track the sorting reference
 
   // Fetch resources from API on initial load
   useEffect(() => {
-    fetchResources();     
+    fetchResources();
   }, []);
 
+  // Fetch resources when the sort state changes
   useEffect(() => {
     loadedRows.current = 0;
     sortRef.current = sort;
-    fetchResources(); 
+    fetchResources();
   }, [sort]);
 
+  // Add scroll event listener and clean up on unmount
+  useEffect(() => {
+    scrollListener();
+    return () => {
+      unScrollListener();
+    };
+  }, []);
 
-useEffect(() => {
-  scrollListener();
-  return () => {
-    unScrollListener();
+  // Function to add scroll event listener
+  function scrollListener() {
+    window.addEventListener('scroll', handleScroll);
   };
-}, []);
 
-
-  function scrollListener(){
-    window.addEventListener('scroll',handleScroll)
-  };
-
-  function unScrollListener(){
-    window.removeEventListener('scroll',handleScroll)
+  // Function to remove scroll event listener
+  function unScrollListener() {
+    window.removeEventListener('scroll', handleScroll);
   }
 
-  function handleScroll(){
+  // Function to handle scrolling and fetch more resources when nearing the end
+  function handleScroll() {
     const html = window.document.querySelector('html');
-    const howMuchScrolled= html.scrollTop;
-    const howMuchIsToScroll= html.scrollHeight;
-    const leftToScroll= howMuchIsToScroll - howMuchScrolled - html.clientHeight;
+    const howMuchScrolled = html.scrollTop;
+    const howMuchIsToScroll = html.scrollHeight;
+    const leftToScroll = howMuchIsToScroll - howMuchScrolled - html.clientHeight;
     if (leftToScroll <= 100) {
       fetchResources(true);
     }
   };
-  
-  
-  async function fetchResources(append=false){
-    if (fetchingResources.current) return;
-     fetchingResources.current = true;
-     axios.get(`/api/resources?sort=${sortRef.current}&loadedRows=${loadedRows.current}`).then(res => {
-      if (append){
-        setResources(currentResources => [...currentResources, ...res.data]);
-      }
-      else{
-      setResources(res.data);
-    }
 
-    if (res.data?.length > 0){
-      loadedRows.current += res.data.length;
-    }
+  // Function to fetch resources from the API
+  async function fetchResources(append = false) {
+    if (fetchingResources.current) return;
+    fetchingResources.current = true;
+    axios.get(`/api/resources?sort=${sortRef.current}&loadedRows=${loadedRows.current}`).then(res => {
+      if (append) {
+        setResources(currentResources => [...currentResources, ...res.data]);
+      } else {
+        setResources(res.data);
+      }
+
+      if (res.data?.length > 0) {
+        loadedRows.current += res.data.length;
+      }
       fetchingResources.current = false;
-  });
-}
+    });
+  }
 
   // Function to open create popup
-  function openCreatePopup(){
+  function openCreatePopup() {
     setShowCreatePopup(true);
   }
 
   // Function to open resource popup
-  function openResourcePopup(resource){
+  function openResourcePopup(resource) {
     setShowResourcePopup(resource);
   }
 
   // Function to filter resources based on search phrase
-  function filterResources(resource){
+  function filterResources(resource) {
     return resource.title.toLowerCase().includes(searchPhrase.toLowerCase());
   }
 
-  return(
+  return (
     <main className="bg-white md:max-w-3xl mx-auto md:shadow-lg md:rounded-lg md:mt-8 overflow-hidden">
       {/* Header section */}
       <div className="bg-gradient-to-r from-emerald-400 to-green-400 p-8">
@@ -99,15 +99,15 @@ useEffect(() => {
       </div>
 
       {/* Search and create section */}
-      <div className="bg-gray-100 px-8 py-2 flex border-b"> 
-          <div className="grow flex items-center">
-            <span>Sort by:</span>
-            <select value={sort} onChange={e => {setSort(e.target.value);}}>  
-              <option value="alpha">A-Z</option>
-              <option value="latest">Latest</option>
-            </select>
-          </div>
-          <input className="" type="text" placeholder="Search" value={searchPhrase} onChange={e => setSearchPhrase(e.target.value)}/>     
+      <div className="bg-gray-100 px-8 py-2 flex border-b">
+        <div className="grow flex items-center">
+          <label for="sorting">Sort by:</label>
+          <select id="sorting" value={sort} onChange={e => { setSort(e.target.value); }}>
+            <option value="alpha">A-Z</option>
+            <option value="latest">Latest</option>
+          </select>
+        </div>
+        <input className="" type="text" placeholder="Search" value={searchPhrase} onChange={e => setSearchPhrase(e.target.value)} />
         <div>
           <Button primary onClick={openCreatePopup}>
             Create
@@ -117,6 +117,7 @@ useEffect(() => {
 
       {/* Resource list */}
       <div className="px-8">
+        {/* Map through resources, apply filtering, and render ResourceItem components */}
         {resources.filter(filterResources).map(resource => (
           <ResourceItem key={resource._id} {...resource} onOpen={() => openResourcePopup(resource)} />
         ))}
@@ -129,7 +130,7 @@ useEffect(() => {
 
       {/* Resource item popup */}
       {showResourcePopup && (
-        <ResourceItemPopup {...showResourcePopup} setShow={setShowResourcePopup}/>
+        <ResourceItemPopup {...showResourcePopup} setShow={setShowResourcePopup} />
       )}
     </main>
   );
